@@ -1,0 +1,6 @@
+@MeetPoint.API_HostAddress = http://localhost:5048
+
+GET {{MeetPoint.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

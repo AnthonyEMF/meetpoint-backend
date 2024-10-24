@@ -1,0 +1,62 @@
+[
+  {
+    "Id": "ddffdfd7-42b2-465f-a7d0-37a1e766fe44",
+    "CategoryId": "543aa099-c9a3-4129-a29b-92c34e4c4828",
+    "OrganizerId": "2a373bd7-1829-4bb4-abb7-19da4257891d",
+    "Title": "Concierto de Rock",
+    "Description": "Un evento de música en vivo con las mejores bandas de rock.",
+    "Ubication": "Gimnasio Municipal",
+    "Date": "2024-09-20T15:30:00",
+    "PublicationDate": "2024-06-19"
+  },
+  {
+    "Id": "c727a1ea-f651-4392-b2e3-54cfa33db3db",
+    "CategoryId": "f65ece15-da8c-4df0-a54a-6a91e67dd75a",
+    "OrganizerId": "b914d419-0dea-4117-a50f-4fc55b684901",
+    "Title": "Torneo de Fútbol",
+    "Description": "Campeonato de fútbol 11 de equipos de las universidades.",
+    "Ubication": "Estadio Copán Galel",
+    "Date": "2024-09-13T17:00:00",
+    "PublicationDate": "2024-07-30"
+  },
+  {
+    "Id": "3a81e7ee-16b2-41f5-951e-150245b5060b",
+    "CategoryId": "21abd8c2-e887-4f01-85a5-6be5df519761",
+    "OrganizerId": "704540fe-2eaa-412f-a635-d41a4ec17404",
+    "Title": "Exposición de Arte",
+    "Description": "Presentación de esculturas y pinturas del arte contemporaneo.",
+    "Ubication": "Centro de las artes",
+    "Date": "2024-09-26T10:00:00",
+    "PublicationDate": "2024-05-08"
+  },
+  {
+    "Id": "d10186a3-39d0-4db9-87fe-eddd539738d0",
+    "CategoryId": "a027c938-e2ba-4c4b-a89f-2fd7ca8f2cdc",
+    "OrganizerId": "2a373bd7-1829-4bb4-abb7-19da4257891d",
+    "Title": "Charla sobre IA",
+    "Description": "Debate y capacitación sobre la Inteligencia Artificial.",
+    "Ubication": "UNAH CUROC",
+    "Date": "2024-09-15T17:00:00",
+    "PublicationDate": "2024-07-30"
+  },
+  {
+    "Id": "06ca4418-7da2-4b1e-a62f-75efc1df32b9",
+    "CategoryId": "b17b720b-2d51-412a-8f99-57ec0b1a949c",
+    "OrganizerId": "b914d419-0dea-4117-a50f-4fc55b684901",
+    "Title": "Campaña de Vacunación",
+    "Description": "Ven a aplicarte la vacuna contra la influenza.",
+    "Ubication": "Las Canchitas",
+    "Date": "2024-09-18T13:00:00",
+    "PublicationDate": "2024-07-30"
+  },
+  {
+    "Id": "24180d65-fdaa-4f6a-b63a-9c77160cc4db",
+    "CategoryId": "642cc84e-3632-498b-b368-98c47eb5efed",
+    "OrganizerId": "704540fe-2eaa-412f-a635-d41a4ec17404",
+    "Title": "Show de Magia",
+    "Description": "El increible mago Juan Perez nos asombra con sus trucos de magia.",
+    "Ubication": "Casa de la Cultura",
+    "Date": "2024-09-23T19:00:00",
+    "PublicationDate": "2024-07-30"
+  }
+]

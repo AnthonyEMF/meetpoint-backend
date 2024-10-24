@@ -1,0 +1,23 @@
+[
+  {
+    "Id": "998ce7f9-c9b7-4cca-9f4b-2027eb717a04",
+    "UserId": "b914d419-0dea-4117-a50f-4fc55b684901",
+    "EventId": "ddffdfd7-42b2-465f-a7d0-37a1e766fe44",
+    "Content": "Ojalá venga Polache",
+    "PublicationDate": "2024-07-19"
+  },
+  {
+    "Id": "34081501-43b0-46fe-b4c9-3a7e97bf145e",
+    "UserId": "704540fe-2eaa-412f-a635-d41a4ec17404",
+    "EventId": "c727a1ea-f651-4392-b2e3-54cfa33db3db",
+    "Content": "¿Participará el equipo del CUROC?",
+    "PublicationDate": "2024-07-24"
+  },
+  {
+    "Id": "c9d354e2-913c-4180-aa6d-e5296b187a7b",
+    "UserId": "2a373bd7-1829-4bb4-abb7-19da4257891d",
+    "EventId": "3a81e7ee-16b2-41f5-951e-150245b5060b",
+    "Content": "Ya quiero ver esas hermosas pinturas",
+    "PublicationDate": "2024-07-30"
+  }
+]
