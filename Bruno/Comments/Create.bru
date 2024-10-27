@@ -1,0 +1,23 @@
+meta {
+  name: Create
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{PATH}}/comments
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{TOKEN}}
+}
+
+body:json {
+  {
+    "userId": "2a373bd7-1829-4bb4-abb7-19da4257891d",
+    "eventId": "9044e1e3-7832-46e8-c892-08dcbf3aa20e",
+    "content": "Hola soy otro comentario"
+  }
+}

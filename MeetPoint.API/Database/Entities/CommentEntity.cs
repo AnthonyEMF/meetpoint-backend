@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -8,7 +9,7 @@ namespace MeetPoint.API.Database.Entities
 	public class CommentEntity : BaseEntity
 	{
 		[Column("user_id")]
-		public Guid UserId { get; set; }
+		public string UserId { get; set; }
 		[ForeignKey(nameof(UserId))]
 		public virtual UserEntity User { get; set; }
 
@@ -24,5 +25,9 @@ namespace MeetPoint.API.Database.Entities
 
 		[Column("publication_date")]
 		public DateTime PublicationDate { get; set; }
+
+		// Propiedades para el CommentConfiguration
+		public virtual UserEntity CreatedByUser { get; set; }
+		public virtual UserEntity UpdatedByUser { get; set; }
 	}
 }

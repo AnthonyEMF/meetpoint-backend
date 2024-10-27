@@ -1,48 +1,62 @@
-﻿using MeetPoint.API.Database.Entities;
+﻿using MeetPoint.API.Database.Configuration;
+using MeetPoint.API.Database.Entities;
 using MeetPoint.API.Services.Interfaces;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace MeetPoint.API.Database
 {
-	public class MeetPointContext : DbContext
+	public class MeetPointContext : IdentityDbContext<UserEntity>
 	{
-		private readonly IAuthService _authService;
+		private readonly IAuditService _auditService;
 
-		public MeetPointContext(DbContextOptions options, IAuthService authService) : base(options)
+		public MeetPointContext(DbContextOptions options, IAuditService auditService) : base(options)
         {
-			this._authService = authService;
+			this._auditService = auditService;
 		}
 
-		public DbSet<CategoryEntity> Categories { get; set; }
-		public DbSet<EventEntity> Events { get; set; }
-		public DbSet<UserEntity> Users { get; set; }
-		public DbSet<AttendanceEntity> Attendances { get; set; }
-		public DbSet<CommentEntity> Comments { get; set; }
-
-		protected override void OnModelCreating(ModelBuilder builder)
+		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{
-			base.OnModelCreating(builder);
+			base.OnModelCreating(modelBuilder);
+
+			modelBuilder.HasDefaultSchema("security");
+
+			// Tablas relacionadas a Usuarios
+			modelBuilder.Entity<UserEntity>().ToTable("users");
+			modelBuilder.Entity<IdentityRole>().ToTable("roles");
+			modelBuilder.Entity<IdentityUserRole<string>>().ToTable("users_roles");
+			modelBuilder.Entity<IdentityUserClaim<string>>().ToTable("users_claims");
+			modelBuilder.Entity<IdentityRoleClaim<string>>().ToTable("roles_claims");
+			modelBuilder.Entity<IdentityUserLogin<string>>().ToTable("users_logins");
+			modelBuilder.Entity<IdentityUserToken<string>>().ToTable("users_tokens");
+
+			// Configurations
+			modelBuilder.ApplyConfiguration(new AttendanceConfiguration());
+			modelBuilder.ApplyConfiguration(new CategoryConfiguration());
+			modelBuilder.ApplyConfiguration(new CommentConfiguration());
+			modelBuilder.ApplyConfiguration(new EventConfiguration());
 
 			// Configuración para evitar errores en cascada
-			builder.Entity<AttendanceEntity>()
+			modelBuilder.Entity<AttendanceEntity>()
 				.HasOne(a => a.User)
 				.WithMany(u => u.Attendances)
 				.HasForeignKey(a => a.UserId)
 				.OnDelete(DeleteBehavior.NoAction);
 
-			builder.Entity<AttendanceEntity>()
+			modelBuilder.Entity<AttendanceEntity>()
 				.HasOne(a => a.Event)
 				.WithMany(e => e.Attendances)
 				.HasForeignKey(a => a.EventId)
 				.OnDelete(DeleteBehavior.Cascade);
 
-			builder.Entity<CommentEntity>()
+			modelBuilder.Entity<CommentEntity>()
 				.HasOne(c => c.User)
 				.WithMany(u => u.Comments)
 				.HasForeignKey(c => c.UserId)
 				.OnDelete(DeleteBehavior.NoAction);
 
-			builder.Entity<CommentEntity>()
+			modelBuilder.Entity<CommentEntity>()
 				.HasOne(c => c.Event)
 				.WithMany(e => e.Comments)
 				.HasForeignKey(c => c.EventId)
@@ -63,12 +77,12 @@ namespace MeetPoint.API.Database
 				{
 					if (entry.State == EntityState.Added)
 					{
-						entity.CreatedBy = _authService.GetUserId();
+						entity.CreatedBy = _auditService.GetUserId();
 						entity.CreatedDate = DateTime.Now;
 					}
 					else
 					{
-						entity.UpdatedBy = _authService.GetUserId();
+						entity.UpdatedBy = _auditService.GetUserId();
 						entity.UpdatedDate = DateTime.Now;
 					}
 				}
@@ -76,5 +90,10 @@ namespace MeetPoint.API.Database
 
 			return base.SaveChangesAsync(cancellationToken);
 		}
+
+		public DbSet<CategoryEntity> Categories { get; set; }
+		public DbSet<EventEntity> Events { get; set; }
+		public DbSet<AttendanceEntity> Attendances { get; set; }
+		public DbSet<CommentEntity> Comments { get; set; }
 	}
 }

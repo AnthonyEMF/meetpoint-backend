@@ -5,6 +5,7 @@ using MeetPoint.API.Database.Entities;
 using MeetPoint.API.Dtos.Comments;
 using MeetPoint.API.Dtos.Common;
 using MeetPoint.API.Services.Interfaces;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace MeetPoint.API.Services
@@ -12,7 +13,7 @@ namespace MeetPoint.API.Services
     public class CommentsService : ICommentsService
     {
         private readonly MeetPointContext _context;
-        private readonly IMapper _mapper;
+		private readonly IMapper _mapper;
 		private readonly ILogger _logger;
         private readonly int PAGE_SIZE;
 
@@ -23,7 +24,7 @@ namespace MeetPoint.API.Services
             IConfiguration configuration)
         {
             this._context = context;
-            this._mapper = mapper;
+			this._mapper = mapper;
 			this._logger = logger;
 			PAGE_SIZE = configuration.GetValue<int>("PageSize");
 		}
@@ -106,7 +107,7 @@ namespace MeetPoint.API.Services
 			try
 			{
 				// Validar que el usuario del comentario existe
-				var existingUser = await _context.Users.FindAsync(dto.UserId);
+				var existingUser = await _context.Users.FindAsync(dto.UserId.ToString());
 				if (existingUser is null)
 				{
 					return new ResponseDto<CommentDto>
@@ -177,10 +178,10 @@ namespace MeetPoint.API.Services
 				}
 
 				// Validar si el UserId o EventId estan siendo modificados
-				if (dto.UserId != commentEntity.UserId || dto.EventId != commentEntity.EventId)
+				if (dto.UserId.ToString() != commentEntity.UserId || dto.EventId != commentEntity.EventId)
 				{
 					// Validar que UserId existe si se va a editar
-					if (dto.UserId != commentEntity.UserId)
+					if (dto.UserId.ToString() != commentEntity.UserId)
 					{
 						var existingUser = await _context.Users.FindAsync(dto.UserId);
 						if (existingUser is null)
@@ -192,7 +193,7 @@ namespace MeetPoint.API.Services
 								Message = $"UserId: {MessagesConstant.RECORD_NOT_FOUND}"
 							};
 						}
-						commentEntity.UserId = dto.UserId;
+						commentEntity.UserId = dto.UserId.ToString();
 					}
 
 					// Validar que EventId existe si se va a editar

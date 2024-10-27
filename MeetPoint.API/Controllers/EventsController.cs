@@ -1,12 +1,15 @@
-﻿using MeetPoint.API.Dtos.Common;
+﻿using MeetPoint.API.Constants;
+using MeetPoint.API.Dtos.Common;
 using MeetPoint.API.Dtos.Events;
 using MeetPoint.API.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MeetPoint.API.Controllers
 {
 	[ApiController]
 	[Route("api/events")]
+	[Authorize(AuthenticationSchemes = "Bearer")]
 	public class EventsController : ControllerBase
 	{
 		private readonly IEventsService _eventsService;
@@ -17,6 +20,7 @@ namespace MeetPoint.API.Controllers
 		}
 
 		[HttpGet]
+		[AllowAnonymous]
 		public async Task<ActionResult<ResponseDto<List<EventDto>>>> GetAll(string searchTerm = "", int page = 1)
 		{
 			var response = await _eventsService.GetAllEventsAsync(searchTerm, page);
@@ -24,6 +28,7 @@ namespace MeetPoint.API.Controllers
 		}
 
 		[HttpGet("{id}")]
+		[AllowAnonymous]
 		public async Task<ActionResult<ResponseDto<EventDto>>> Get(Guid id)
 		{
 			var response = await _eventsService.GetEventByIdAsync(id);
@@ -31,6 +36,7 @@ namespace MeetPoint.API.Controllers
 		}
 
 		[HttpPost]
+		[Authorize(Roles = $"{RolesConstant.USER}, {RolesConstant.ORGANIZER}")]
 		public async Task<ActionResult<ResponseDto<EventDto>>> Create(EventCreateDto dto)
 		{
 			var response = await _eventsService.CreateAsync(dto);
@@ -38,6 +44,7 @@ namespace MeetPoint.API.Controllers
 		}
 
 		[HttpPut("{id}")]
+		[Authorize(Roles = $"{RolesConstant.USER}, {RolesConstant.ORGANIZER}")]
 		public async Task<ActionResult<ResponseDto<EventDto>>> Edit(EventEditDto dto, Guid id)
 		{
 			var response = await _eventsService.EditAsync(dto, id);
@@ -45,6 +52,7 @@ namespace MeetPoint.API.Controllers
 		}
 
 		[HttpDelete("{id}")]
+		[Authorize(Roles = $"{RolesConstant.USER}, {RolesConstant.ORGANIZER}")]
 		public async Task<ActionResult<ResponseDto<EventDto>>> Delete(Guid id)
 		{
 			var response = await _eventsService.DeleteAsync(id);

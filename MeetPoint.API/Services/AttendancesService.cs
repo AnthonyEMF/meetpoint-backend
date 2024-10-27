@@ -5,6 +5,7 @@ using MeetPoint.API.Database.Entities;
 using MeetPoint.API.Dtos.Attendances;
 using MeetPoint.API.Dtos.Common;
 using MeetPoint.API.Services.Interfaces;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace MeetPoint.API.Services
@@ -12,7 +13,7 @@ namespace MeetPoint.API.Services
     public class AttendancesService : IAttendancesService
     {
         private readonly MeetPointContext _context;
-        private readonly IMapper _mapper;
+		private readonly IMapper _mapper;
 		private readonly ILogger _logger;
         private readonly int PAGE_SIZE;
 
@@ -23,7 +24,7 @@ namespace MeetPoint.API.Services
             IConfiguration configuration)
         {
             this._context = context;
-            this._mapper = mapper;
+			this._mapper = mapper;
 			this._logger = logger;
 			PAGE_SIZE = configuration.GetValue<int>("PageSize");
 		}
@@ -106,7 +107,7 @@ namespace MeetPoint.API.Services
 			try
 			{
 				// Validar que el usuario de la asistencia existe
-				var existingUser = await _context.Users.FindAsync(dto.UserId);
+				var existingUser = await _context.Users.FindAsync(dto.UserId.ToString());
 				if (existingUser is null)
 				{
 					return new ResponseDto<AttendanceDto>
@@ -131,7 +132,7 @@ namespace MeetPoint.API.Services
 
 				// Verificar si el usuario ya tiene una asistencia para el evento
 				var existingAttendance = await _context.Attendances
-					.AnyAsync(a => a.EventId == dto.EventId && a.UserId == dto.UserId);
+					.AnyAsync(a => a.EventId == dto.EventId && a.UserId.ToString() == dto.UserId.ToString());
 
 				if (existingAttendance)
 				{
@@ -190,11 +191,11 @@ namespace MeetPoint.API.Services
 				}
 
 				// Validar si el UserId o EventId estan siendo modificados
-				if (dto.UserId != attendanceEntity.UserId || dto.EventId != attendanceEntity.EventId)
+				if (dto.UserId.ToString() != attendanceEntity.UserId || dto.EventId != attendanceEntity.EventId)
 				{
 					// Validar si el usuario ya tiene una asistencia al evento
 					var existingAttendance = await _context.Attendances
-						.AnyAsync(a => a.EventId == dto.EventId && a.UserId == dto.UserId && a.Id != id);
+						.AnyAsync(a => a.EventId == dto.EventId && a.UserId.ToString() == dto.UserId.ToString() && a.Id != id);
 
 					if (existingAttendance)
 					{
@@ -207,7 +208,7 @@ namespace MeetPoint.API.Services
 					}
 
 					// Validar que UserId existe si se va a editar
-					if (dto.UserId != attendanceEntity.UserId)
+					if (dto.UserId.ToString() != attendanceEntity.UserId)
 					{
 						var existingUser = await _context.Users.FindAsync(dto.UserId);
 						if (existingUser is null)
@@ -219,7 +220,7 @@ namespace MeetPoint.API.Services
 								Message = $"UserId: {MessagesConstant.RECORD_NOT_FOUND}"
 							};
 						}
-						attendanceEntity.UserId = dto.UserId;
+						attendanceEntity.UserId = dto.UserId.ToString();
 					}
 
 					// Validar que EventId existe si se va a editar

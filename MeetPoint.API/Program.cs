@@ -1,5 +1,7 @@
 using MeetPoint.API;
 using MeetPoint.API.Database;
+using MeetPoint.API.Database.Entities;
+using Microsoft.AspNetCore.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,7 +22,10 @@ using (var scope = app.Services.CreateScope())
 	try
 	{
 		var context = services.GetRequiredService<MeetPointContext>();
-		await MeetPointSeeder.LoadDataAsync(context, loggerFactory);
+		var userManager = services.GetRequiredService<UserManager<UserEntity>>();
+		var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
+
+		await MeetPointSeeder.LoadDataAsync(context, loggerFactory, userManager, roleManager);
 	}
 	catch (Exception e)
 	{

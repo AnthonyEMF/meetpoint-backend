@@ -11,14 +11,14 @@ namespace MeetPoint.API.Database.Entities
 		public Guid Id { get; set; }
 
 		// Atributos para auditoría
-		[StringLength(100)]
+		[StringLength(450)]
 		[Column("created_by")]
 		public string CreatedBy { get; set; }
 
 		[Column("created_date")]
 		public DateTime CreatedDate { get; set; }
 
-		[StringLength(100)]
+		[StringLength(450)]
 		[Column("updated_by")]
 		public string UpdatedBy { get; set; }
 

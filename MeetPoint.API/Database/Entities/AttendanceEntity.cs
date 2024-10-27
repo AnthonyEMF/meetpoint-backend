@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Identity;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MeetPoint.API.Database.Entities
@@ -7,7 +8,7 @@ namespace MeetPoint.API.Database.Entities
 	public class AttendanceEntity : BaseEntity
 	{
 		[Column("user_id")]
-        public Guid UserId { get; set; }
+        public string UserId { get; set; }
 		[ForeignKey(nameof(UserId))]
 		public virtual UserEntity User { get; set; }
 
@@ -21,5 +22,9 @@ namespace MeetPoint.API.Database.Entities
 		[StringLength(10)]
 		[Column("state")]
 		public string State { get; set; }
+
+		// Propiedades para el AttendanceConfiguration
+		public virtual UserEntity CreatedByUser { get; set; }
+		public virtual UserEntity UpdatedByUser { get; set; }
 	}
 }

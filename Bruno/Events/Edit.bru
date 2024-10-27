@@ -1,0 +1,26 @@
+meta {
+  name: Edit
+  type: http
+  seq: 1
+}
+
+put {
+  url: {{PATH}}/events/67465a53-99be-4122-2431-08dcb97e3216
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{TOKEN}}
+}
+
+body:json {
+  {
+    "categoryId": "543aa099-c9a3-4129-a29b-92c34e4c4828",
+    "organizerId": "2A373BD7-1829-4BB4-ABB7-19DA4257891D",
+    "title": "Evento de Prueba | Editado",
+    "description": "Descripcion del Evento de Prueba | Editado",
+    "ubication": "Santa Rosa de Copán | Editado",
+    "date": "2025-10-25T14:00:00"
+  }
+}

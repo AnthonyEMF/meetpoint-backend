@@ -1,0 +1,23 @@
+meta {
+  name: Delete
+  type: http
+  seq: 1
+}
+
+delete {
+  url: {{PATH}}/comments/3cfbbfde-f6ae-40ea-60ad-08dcb9c6d0e4
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{TOKEN}}
+}
+
+body:json {
+  {
+    "userId": "2a373bd7-1829-4bb4-abb7-19da4257891d",
+    "eventId": "dc43388f-8c0d-4165-d40e-08dcb9981981",
+    "content": "Hola soy comentario editadooo"
+  }
+}

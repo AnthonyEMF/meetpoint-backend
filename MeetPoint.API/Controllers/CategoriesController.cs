@@ -1,12 +1,15 @@
-﻿using MeetPoint.API.Dtos.Categories;
+﻿using MeetPoint.API.Constants;
+using MeetPoint.API.Dtos.Categories;
 using MeetPoint.API.Dtos.Common;
 using MeetPoint.API.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MeetPoint.API.Controllers
 {
 	[ApiController]
 	[Route("api/categories")]
+	[Authorize(AuthenticationSchemes = "Bearer")]
 	public class CategoriesController : ControllerBase
 	{
 		private readonly ICategoriesService _categoriesService;
@@ -17,6 +20,7 @@ namespace MeetPoint.API.Controllers
 		}
 
 		[HttpGet]
+		[AllowAnonymous]
 		public async Task<ActionResult<ResponseDto<List<CategoryDto>>>> GetAll(string searchTerm = "", int page = 1)
 		{
 			var response = await _categoriesService.GetAllCategoriesAsync(searchTerm, page);
@@ -24,6 +28,7 @@ namespace MeetPoint.API.Controllers
 		}
 
 		[HttpGet("{id}")]
+		[AllowAnonymous]
 		public async Task<ActionResult<ResponseDto<CategoryDto>>> Get(Guid id)
 		{
 			var response = await _categoriesService.GetCategoryByIdAsync(id);
@@ -31,6 +36,7 @@ namespace MeetPoint.API.Controllers
 		}
 
 		[HttpPost]
+		[Authorize(Roles = $"{RolesConstant.ADMIN}, {RolesConstant.ORGANIZER}")]
 		public async Task<ActionResult<ResponseDto<CategoryDto>>> Create(CategoryCreateDto dto)
 		{
 			var response = await _categoriesService.CreateAsync(dto);
@@ -38,6 +44,7 @@ namespace MeetPoint.API.Controllers
 		}
 
 		[HttpPut("{id}")]
+		[Authorize(Roles = $"{RolesConstant.ADMIN}, {RolesConstant.ORGANIZER}")]
 		public async Task<ActionResult<ResponseDto<CategoryDto>>> Edit(CategoryEditDto dto, Guid id)
 		{
 			var response = await _categoriesService.EditAsync(dto, id);
@@ -45,6 +52,7 @@ namespace MeetPoint.API.Controllers
 		}
 
 		[HttpDelete("{id}")]
+		[Authorize(Roles = $"{RolesConstant.ADMIN}, {RolesConstant.ORGANIZER}")]
 		public async Task<ActionResult<ResponseDto<CategoryDto>>> Delete(Guid id)
 		{
 			var response = await _categoriesService.DeleteAsync(id);

@@ -1,0 +1,16 @@
+meta {
+  name: Pagination List
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{PATH}}/events?searchTerm&page=1
+  body: none
+  auth: none
+}
+
+params:query {
+  searchTerm: 
+  page: 1
+}

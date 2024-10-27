@@ -5,6 +5,7 @@ using MeetPoint.API.Database.Entities;
 using MeetPoint.API.Dtos.Common;
 using MeetPoint.API.Dtos.Events;
 using MeetPoint.API.Services.Interfaces;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace MeetPoint.API.Services
@@ -122,7 +123,7 @@ namespace MeetPoint.API.Services
 				}
 
 				// Validar que el usuario organizador existe
-				var existingOrganizer = await _context.Users.FindAsync(dto.OrganizerId);
+				var existingOrganizer = await _context.Users.FindAsync(dto.OrganizerId.ToString());
 				if (existingOrganizer is null)
 				{
 					return new ResponseDto<EventDto>
@@ -197,7 +198,7 @@ namespace MeetPoint.API.Services
 				}
 
 				// Validar que el organizador existe si se va a editar
-				if (dto.OrganizerId != eventEntity.OrganizerId)
+				if (dto.OrganizerId.ToString() != eventEntity.OrganizerId)
 				{
 					var organizer = await _context.Users.FindAsync(dto.OrganizerId);
 					if (organizer == null)
@@ -209,7 +210,7 @@ namespace MeetPoint.API.Services
 							Message = $"OrganizerId: {MessagesConstant.RECORD_NOT_FOUND}"
 						};
 					}
-					eventEntity.OrganizerId = dto.OrganizerId;
+					eventEntity.OrganizerId = dto.OrganizerId.ToString();
 				}
 
 				// Actualizar propiedades del evento

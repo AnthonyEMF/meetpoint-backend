@@ -1,0 +1,25 @@
+meta {
+  name: Edit
+  type: http
+  seq: 1
+}
+
+put {
+  url: {{PATH}}/users/db06f094-00a7-4e23-2493-08dcba44bcb4
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{TOKEN}}
+}
+
+body:json {
+  {
+    "firstName": "Maria",
+    "lastName": "Funez",
+    "email": "mariafunez@gmail.com",
+    "password": "hola12345",
+    "location": "Barrio El Carmen"
+  }
+}

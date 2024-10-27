@@ -1,13 +1,16 @@
-﻿using MeetPoint.API.Dtos.Comments;
+﻿using MeetPoint.API.Constants;
+using MeetPoint.API.Dtos.Comments;
 using MeetPoint.API.Dtos.Common;
 using MeetPoint.API.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MeetPoint.API.Controllers
 {
     [ApiController]
     [Route("api/comments")]
-    public class CommentsController : ControllerBase
+	[Authorize(AuthenticationSchemes = "Bearer")]
+	public class CommentsController : ControllerBase
     {
         private readonly ICommentsService _commentsService;
 
@@ -17,6 +20,7 @@ namespace MeetPoint.API.Controllers
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public async Task<ActionResult<ResponseDto<List<CommentDto>>>> GetAll(string searchTerm = "", int page = 1)
         {
             var response = await _commentsService.GetAllCommentsAsync(searchTerm, page);
@@ -24,6 +28,7 @@ namespace MeetPoint.API.Controllers
         }
 
         [HttpGet("{id}")]
+        [AllowAnonymous]
         public async Task<ActionResult<ResponseDto<CommentDto>>> Get(Guid id)
         {
             var response = await _commentsService.GetCommentByIdAsync(id);
@@ -31,21 +36,24 @@ namespace MeetPoint.API.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<ResponseDto<CommentDto>>> Create(CommentCreateDto dto)
+		[Authorize(Roles = $"{RolesConstant.USER}, {RolesConstant.ORGANIZER}")]
+		public async Task<ActionResult<ResponseDto<CommentDto>>> Create(CommentCreateDto dto)
         {
             var response = await _commentsService.CreateAsync(dto);
             return StatusCode(response.StatusCode, response);
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult<ResponseDto<CommentDto>>> Edit(CommentEditDto dto, Guid id)
+		[Authorize(Roles = $"{RolesConstant.USER}, {RolesConstant.ORGANIZER}")]
+		public async Task<ActionResult<ResponseDto<CommentDto>>> Edit(CommentEditDto dto, Guid id)
         {
             var response = await _commentsService.EditAsync(dto, id);
             return StatusCode(response.StatusCode, response);
         }
 
         [HttpDelete("{id}")]
-        public async Task<ActionResult<ResponseDto<CommentDto>>> Delete(Guid id)
+		[Authorize(Roles = $"{RolesConstant.USER}, {RolesConstant.ORGANIZER}")]
+		public async Task<ActionResult<ResponseDto<CommentDto>>> Delete(Guid id)
         {
             var response = await _commentsService.DeleteAsync(id);
             return StatusCode(response.StatusCode, response);

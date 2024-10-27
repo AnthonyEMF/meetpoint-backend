@@ -1,4 +1,6 @@
-﻿using MeetPoint.API.Database.Entities;
+﻿using MeetPoint.API.Constants;
+using MeetPoint.API.Database.Entities;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 
@@ -6,11 +8,16 @@ namespace MeetPoint.API.Database
 {
 	public class MeetPointSeeder
 	{
-		public static async Task LoadDataAsync(MeetPointContext context, ILoggerFactory loggerFactory)
+		public static async Task LoadDataAsync(
+			MeetPointContext context,
+			ILoggerFactory loggerFactory,
+			UserManager<UserEntity> userManager,
+			RoleManager<IdentityRole> roleManager)
 		{
 			try
 			{
-				await LoadUsersAsync(context, loggerFactory);
+				await LoadUsersAndRolesAsync(userManager, roleManager, loggerFactory);
+
 				await LoadCategoriesAsync(context, loggerFactory);
 				await LoadEventsAsync(context, loggerFactory);
 				await LoadAttendancesAsync(context, loggerFactory);
@@ -20,6 +27,68 @@ namespace MeetPoint.API.Database
 			{
 				var logger = loggerFactory.CreateLogger<MeetPointSeeder>();
 				logger.LogError(ex, "Error al inicializar la Data del API.");
+			}
+		}
+
+		public static async Task LoadUsersAndRolesAsync(
+			UserManager<UserEntity> userManager,
+			RoleManager<IdentityRole> roleManager,
+			ILoggerFactory loggerFactory)
+		{
+			try
+			{
+				if (!await roleManager.Roles.AnyAsync())
+				{
+					await roleManager.CreateAsync(new IdentityRole(RolesConstant.ADMIN));
+					await roleManager.CreateAsync(new IdentityRole(RolesConstant.ORGANIZER));
+					await roleManager.CreateAsync(new IdentityRole(RolesConstant.USER));
+				}
+
+				if (!await userManager.Users.AnyAsync())
+				{
+					var userAdmin = new UserEntity
+					{
+						Id = "2a373bd7-1829-4bb4-abb7-19da4257891d",
+						Email = "aemiranda@unah.hn",
+						UserName = "aemiranda@unah.hn",
+						FirstName = "Anthony",
+						LastName = "Miranda",
+						Location = "Santa Rosa de Copán"
+					};
+
+					var userOrganizer = new UserEntity
+					{
+						Id = "b914d419-0dea-4117-a50f-4fc55b684901",
+						Email = "isaacvides@unah.hn",
+						UserName = "isaacvides@unah.hn",
+						FirstName = "Danilo",
+						LastName = "Vides",
+						Location = "Santa Rita, Copán"
+					};
+
+					var normalUser = new UserEntity
+					{
+						Id = "704540fe-2eaa-412f-a635-d41a4ec17404",
+						Email = "jperez@unah.hn",
+						UserName = "jperez@unah.hn",
+						FirstName = "Juan",
+						LastName = "Perez",
+						Location = "Gracias, Lempira"
+					};
+
+					await userManager.CreateAsync(userAdmin, "Temporal01*");
+					await userManager.CreateAsync(userOrganizer, "Temporal01*");
+					await userManager.CreateAsync(normalUser, "Temporal01*");
+
+					await userManager.AddToRoleAsync(userAdmin, RolesConstant.ADMIN);
+					await userManager.AddToRoleAsync(userOrganizer, RolesConstant.ORGANIZER);
+					await userManager.AddToRoleAsync(normalUser, RolesConstant.USER);
+				}
+			}
+			catch (Exception e)
+			{
+				var logger = loggerFactory.CreateLogger<MeetPointSeeder>();
+				logger.LogError(e.Message);
 			}
 		}
 
@@ -33,11 +102,13 @@ namespace MeetPoint.API.Database
 				
 				if (!await context.Categories.AnyAsync())
 				{
+					var user = await context.Users.FirstOrDefaultAsync();
+
 					for (int i=0; i < categories.Count; i++)
 					{
-						categories[i].CreatedBy = "2a373bd7-1829-4bb4-abb7-19da4257891d";
+						categories[i].CreatedBy = user.Id;
 						categories[i].CreatedDate = DateTime.Now;
-						categories[i].UpdatedBy = "2a373bd7-1829-4bb4-abb7-19da4257891d";
+						categories[i].UpdatedBy = user.Id;
 						categories[i].UpdatedDate = DateTime.Now;
 					}
 					context.AddRange(categories);
@@ -60,11 +131,13 @@ namespace MeetPoint.API.Database
 
 				if (!await context.Events.AnyAsync())
 				{
+					var user = await context.Users.FirstOrDefaultAsync();
+
 					for (int i = 0; i < events.Count; i++)
 					{
-						events[i].CreatedBy = "2a373bd7-1829-4bb4-abb7-19da4257891d";
+						events[i].CreatedBy = user.Id;
 						events[i].CreatedDate = DateTime.Now;
-						events[i].UpdatedBy = "2a373bd7-1829-4bb4-abb7-19da4257891d";
+						events[i].UpdatedBy = user.Id;
 						events[i].UpdatedDate = DateTime.Now;
 					}
 					context.AddRange(events);
@@ -77,33 +150,6 @@ namespace MeetPoint.API.Database
 				logger.LogError(ex, "Error al ejecutar el Seed de Eventos.");
 			}
 		}
-		public static async Task LoadUsersAsync(MeetPointContext context, ILoggerFactory loggerFactory)
-		{
-			try
-			{
-				var jsonFilePatch = "SeedData/users.json";
-				var jsonContent = await File.ReadAllTextAsync(jsonFilePatch);
-				var users = JsonConvert.DeserializeObject<List<UserEntity>>(jsonContent);
-
-				if (!await context.Users.AnyAsync())
-				{
-					for (int i = 0; i < users.Count; i++)
-					{
-						users[i].CreatedBy = "2a373bd7-1829-4bb4-abb7-19da4257891d";
-						users[i].CreatedDate = DateTime.Now;
-						users[i].UpdatedBy = "2a373bd7-1829-4bb4-abb7-19da4257891d";
-						users[i].UpdatedDate = DateTime.Now;
-					}
-					context.AddRange(users);
-					await context.SaveChangesAsync();
-				}
-			}
-			catch (Exception ex)
-			{
-				var logger = loggerFactory.CreateLogger<MeetPointSeeder>();
-				logger.LogError(ex, "Error al ejecutar el Seed de Usuarios.");
-			}
-		}
 		public static async Task LoadAttendancesAsync(MeetPointContext context, ILoggerFactory loggerFactory)
 		{
 			try
@@ -114,11 +160,13 @@ namespace MeetPoint.API.Database
 
 				if (!await context.Attendances.AnyAsync())
 				{
+					var user = await context.Users.FirstOrDefaultAsync();
+
 					for (int i = 0; i < attendances.Count; i++)
 					{
-						attendances[i].CreatedBy = "2a373bd7-1829-4bb4-abb7-19da4257891d";
+						attendances[i].CreatedBy = user.Id;
 						attendances[i].CreatedDate = DateTime.Now;
-						attendances[i].UpdatedBy = "2a373bd7-1829-4bb4-abb7-19da4257891d";
+						attendances[i].UpdatedBy = user.Id;
 						attendances[i].UpdatedDate = DateTime.Now;
 					}
 					context.AddRange(attendances);
@@ -141,11 +189,13 @@ namespace MeetPoint.API.Database
 
 				if (!await context.Comments.AnyAsync())
 				{
+					var user = await context.Users.FirstOrDefaultAsync();
+
 					for (int i = 0; i < comments.Count; i++)
 					{
-						comments[i].CreatedBy = "2a373bd7-1829-4bb4-abb7-19da4257891d";
+						comments[i].CreatedBy = user.Id;
 						comments[i].CreatedDate = DateTime.Now;
-						comments[i].UpdatedBy = "2a373bd7-1829-4bb4-abb7-19da4257891d";
+						comments[i].UpdatedBy = user.Id;
 						comments[i].UpdatedDate = DateTime.Now;
 					}
 					context.AddRange(comments);

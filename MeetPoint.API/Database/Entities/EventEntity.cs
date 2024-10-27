@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Identity;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MeetPoint.API.Database.Entities
@@ -12,7 +13,7 @@ namespace MeetPoint.API.Database.Entities
 		public virtual CategoryEntity Category { get; set; }
 
 		[Column("organizer_id")]
-		public Guid OrganizerId { get; set; }
+		public string OrganizerId { get; set; }
 		[ForeignKey(nameof(OrganizerId))]
 		public virtual UserEntity Organizer { get; set; }
 
@@ -43,5 +44,9 @@ namespace MeetPoint.API.Database.Entities
 
 		// Navegación: Comentarios del Evento.
 		public virtual ICollection<CommentEntity> Comments { get; set; }
+
+		// Propiedades para el EventConfiguration
+		public virtual UserEntity CreatedByUser { get; set; }
+		public virtual UserEntity UpdatedByUser { get; set; }
 	}
 }

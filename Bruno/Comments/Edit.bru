@@ -1,0 +1,23 @@
+meta {
+  name: Edit
+  type: http
+  seq: 1
+}
+
+put {
+  url: {{PATH}}/comments/4e5396d0-945d-46dd-f010-08dcb9c71276
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{TOKEN}}
+}
+
+body:json {
+  {
+    "userId": "2a373bd7-1829-4bb4-abb7-19da4257891d",
+    "eventId": "dc43388f-8c0d-4165-d40e-08dcb9981981",
+    "content": "Hola soy un comentario editado"
+  }
+}

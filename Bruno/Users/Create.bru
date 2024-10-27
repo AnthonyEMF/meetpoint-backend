@@ -1,0 +1,25 @@
+meta {
+  name: Create
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{PATH}}/users
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{TOKEN}}
+}
+
+body:json {
+  {
+    "firstName": "Edward",
+    "lastName": "Fuentes",
+    "email": "edwardfuentes@gmail.com",
+    "password": "hola1234",
+    "location": "Barrio Dolores"
+  }
+}

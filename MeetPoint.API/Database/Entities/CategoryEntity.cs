@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Identity;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MeetPoint.API.Database.Entities
@@ -18,5 +19,9 @@ namespace MeetPoint.API.Database.Entities
 
 		// Navegación: Eventos que pertenecen a la Categoría.
 		public virtual ICollection<EventEntity> Events { get; set; }
+
+		// Propiedades para el CategoryConfiguration
+		public virtual UserEntity CreatedByUser { get; set; }
+		public virtual UserEntity UpdatedByUser { get; set; }
 	}
 }
