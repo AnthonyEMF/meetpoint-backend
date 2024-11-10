@@ -17,6 +17,8 @@ namespace MeetPoint.API.Services
 		private readonly ILogger _logger;
         private readonly int PAGE_SIZE;
 
+		// TODO: Implementar UserManager para manejar la logica de usuarios
+
 		public AttendancesService(
             MeetPointContext context,
             IMapper mapper,

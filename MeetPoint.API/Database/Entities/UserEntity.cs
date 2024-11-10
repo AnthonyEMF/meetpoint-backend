@@ -6,11 +6,22 @@ namespace MeetPoint.API.Database.Entities
 {
 	public class UserEntity : IdentityUser
 	{
+		[StringLength(70, MinimumLength = 3)]
+		[Required]
 		public string FirstName { get; set; }
 
+		[StringLength(70, MinimumLength = 3)]
+		[Required]
 		public string LastName { get; set; }
 
+		[StringLength(100, MinimumLength = 10)]
+		[Required]
 		public string Location { get; set; }
+
+		[StringLength(450)]
+		public string RefreshToken { get; set; }
+
+		public DateTime RefreshTokenExpire { get; set; }
 
 		// Propiedad calculada: Cantidad de eventos organizados por el usuario.
 		[NotMapped]

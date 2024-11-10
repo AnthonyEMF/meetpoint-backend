@@ -21,7 +21,7 @@ namespace MeetPoint.API.Services
 			return idClaim.Value;
 		}
 
-		// Activar para el Seed de Datos
+		//Activar para el Seed de Datos
 		//public string GetUserId()
 		//{
 		//	return "2a373bd7-1829-4bb4-abb7-19da4257891d";
