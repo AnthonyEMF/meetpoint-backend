@@ -4,7 +4,7 @@ namespace MeetPoint.API.Dtos.Attendances
 {
 	public class AttendanceCreateDto
 	{
-		public Guid UserId { get; set; }
+		public string UserId { get; set; }
 		public Guid EventId { get; set; }
 
 		[Required(ErrorMessage = "Especificar el estado de la asistencia es requerido.")]

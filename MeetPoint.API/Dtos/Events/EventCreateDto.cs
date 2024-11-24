@@ -5,7 +5,7 @@ namespace MeetPoint.API.Dtos.Events
 	public class EventCreateDto
 	{
         public Guid CategoryId { get; set; }
-        public Guid OrganizerId { get; set; }
+        public string OrganizerId { get; set; }
 
         [Required(ErrorMessage = "El campo título es requerido.")]
 		public string Title { get; set; }

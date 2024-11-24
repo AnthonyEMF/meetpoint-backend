@@ -253,8 +253,7 @@ namespace MeetPoint.API.Services
 
 		private JwtSecurityToken GetToken(List<Claim> authClaims)
 		{
-			var authSigninKey = new SymmetricSecurityKey(Encoding.UTF8
-				.GetBytes(_configuration["JWT:Secret"]));
+			var authSigninKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:Secret"]));
 
 			return new JwtSecurityToken(
 				issuer: _configuration["JWT:ValidIssuer"],

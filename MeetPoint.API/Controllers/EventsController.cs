@@ -36,7 +36,7 @@ namespace MeetPoint.API.Controllers
 		}
 
 		[HttpPost]
-		[Authorize(Roles = $"{RolesConstant.USER}, {RolesConstant.ORGANIZER}")]
+		[Authorize(Roles = $"{RolesConstant.USER}, {RolesConstant.ADMIN}, {RolesConstant.ORGANIZER}")]
 		public async Task<ActionResult<ResponseDto<EventDto>>> Create(EventCreateDto dto)
 		{
 			var response = await _eventsService.CreateAsync(dto);
@@ -44,7 +44,7 @@ namespace MeetPoint.API.Controllers
 		}
 
 		[HttpPut("{id}")]
-		[Authorize(Roles = $"{RolesConstant.USER}, {RolesConstant.ORGANIZER}")]
+		[Authorize(Roles = $"{RolesConstant.USER}, {RolesConstant.ADMIN}, {RolesConstant.ORGANIZER}")]
 		public async Task<ActionResult<ResponseDto<EventDto>>> Edit(EventEditDto dto, Guid id)
 		{
 			var response = await _eventsService.EditAsync(dto, id);
@@ -52,7 +52,7 @@ namespace MeetPoint.API.Controllers
 		}
 
 		[HttpDelete("{id}")]
-		[Authorize(Roles = $"{RolesConstant.USER}, {RolesConstant.ORGANIZER}")]
+		[Authorize(Roles = $"{RolesConstant.USER}, {RolesConstant.ADMIN}, {RolesConstant.ORGANIZER}")]
 		public async Task<ActionResult<ResponseDto<EventDto>>> Delete(Guid id)
 		{
 			var response = await _eventsService.DeleteAsync(id);

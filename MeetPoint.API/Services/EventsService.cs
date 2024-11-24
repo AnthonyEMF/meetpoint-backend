@@ -13,17 +13,20 @@ namespace MeetPoint.API.Services
 	public class EventsService : IEventsService
 	{
 		private readonly MeetPointContext _context;
+		private readonly IAuditService _auditService;
 		private readonly IMapper _mapper;
 		private readonly ILogger _logger;
 		private readonly int PAGE_SIZE;
 
 		public EventsService(
 			MeetPointContext context,
+			IAuditService auditService,
 			IMapper mapper,
 			ILogger<EventsService> logger,
 			IConfiguration configuration)
         {
 			this._context = context;
+			this._auditService = auditService;
 			this._mapper = mapper;
 			this._logger = logger;
 			PAGE_SIZE = configuration.GetValue<int>("PageSize");
@@ -122,19 +125,9 @@ namespace MeetPoint.API.Services
 					};
 				}
 
-				// Validar que el usuario organizador existe
-				var existingOrganizer = await _context.Users.FindAsync(dto.OrganizerId.ToString());
-				if (existingOrganizer is null)
-				{
-					return new ResponseDto<EventDto>
-					{
-						StatusCode = 404,
-						Status = false,
-						Message = $"OrganizerId: {MessagesConstant.RECORD_NOT_FOUND}"
-					};
-				}
-
 				var eventEntity = _mapper.Map<EventEntity>(dto);
+				eventEntity.OrganizerId = _auditService.GetUserId();
+
 				eventEntity.PublicationDate = DateTime.Now;
 
 				_context.Events.Add(eventEntity);
@@ -198,7 +191,7 @@ namespace MeetPoint.API.Services
 				}
 
 				// Validar que el organizador existe si se va a editar
-				if (dto.OrganizerId.ToString() != eventEntity.OrganizerId)
+				if (dto.OrganizerId != eventEntity.OrganizerId)
 				{
 					var organizer = await _context.Users.FindAsync(dto.OrganizerId);
 					if (organizer == null)
@@ -210,7 +203,7 @@ namespace MeetPoint.API.Services
 							Message = $"OrganizerId: {MessagesConstant.RECORD_NOT_FOUND}"
 						};
 					}
-					eventEntity.OrganizerId = dto.OrganizerId.ToString();
+					eventEntity.OrganizerId = dto.OrganizerId;
 				}
 
 				// Actualizar propiedades del evento

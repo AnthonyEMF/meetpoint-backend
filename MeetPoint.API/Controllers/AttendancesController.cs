@@ -1,7 +1,6 @@
 ﻿using MeetPoint.API.Constants;
 using MeetPoint.API.Dtos.Attendances;
 using MeetPoint.API.Dtos.Common;
-using MeetPoint.API.Dtos.Events;
 using MeetPoint.API.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -37,7 +36,7 @@ namespace MeetPoint.API.Controllers
         }
 
         [HttpPost]
-		[Authorize(Roles = $"{RolesConstant.USER}")]
+		[Authorize(Roles = $"{RolesConstant.USER}, {RolesConstant.ADMIN}, {RolesConstant.ORGANIZER}")]
 		public async Task<ActionResult<ResponseDto<AttendanceDto>>> Create(AttendanceCreateDto dto)
         {
             var response = await _attendancesService.CreateAsync(dto);
@@ -45,7 +44,7 @@ namespace MeetPoint.API.Controllers
         }
 
         [HttpPut("{id}")]
-		[Authorize(Roles = $"{RolesConstant.USER}")]
+		[Authorize(Roles = $"{RolesConstant.USER}, {RolesConstant.ADMIN}, {RolesConstant.ORGANIZER}")]
 		public async Task<ActionResult<ResponseDto<AttendanceDto>>> Edit(AttendanceEditDto dto, Guid id)
         {
             var response = await _attendancesService.EditAsync(dto, id);
@@ -53,7 +52,7 @@ namespace MeetPoint.API.Controllers
         }
 
         [HttpDelete("{id}")]
-		[Authorize(Roles = $"{RolesConstant.USER}")]
+		[Authorize(Roles = $"{RolesConstant.USER}, {RolesConstant.ADMIN}, {RolesConstant.ORGANIZER}")]
 		public async Task<ActionResult<ResponseDto<AttendanceDto>>> Delete(Guid id)
         {
             var response = await _attendancesService.DeleteAsync(id);

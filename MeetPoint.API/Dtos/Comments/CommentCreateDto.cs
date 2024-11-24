@@ -5,7 +5,7 @@ namespace MeetPoint.API.Dtos.Comments
 {
 	public class CommentCreateDto
 	{
-		public Guid UserId { get; set; }
+		public string UserId { get; set; }
 		public Guid EventId { get; set; }
 
 		[Required(ErrorMessage = "Es requerido escribir el contenido del comentario.")]

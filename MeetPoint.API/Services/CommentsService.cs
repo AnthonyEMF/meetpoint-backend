@@ -13,17 +13,20 @@ namespace MeetPoint.API.Services
     public class CommentsService : ICommentsService
     {
         private readonly MeetPointContext _context;
+		private readonly IAuditService _auditService;
 		private readonly IMapper _mapper;
 		private readonly ILogger _logger;
         private readonly int PAGE_SIZE;
 
 		public CommentsService(
             MeetPointContext context,
+			IAuditService auditService,
             IMapper mapper,
             ILogger<CommentsService> logger,
             IConfiguration configuration)
         {
             this._context = context;
+			this._auditService = auditService;
 			this._mapper = mapper;
 			this._logger = logger;
 			PAGE_SIZE = configuration.GetValue<int>("PageSize");
@@ -106,18 +109,6 @@ namespace MeetPoint.API.Services
 		{
 			try
 			{
-				// Validar que el usuario del comentario existe
-				var existingUser = await _context.Users.FindAsync(dto.UserId.ToString());
-				if (existingUser is null)
-				{
-					return new ResponseDto<CommentDto>
-					{
-						StatusCode = 404,
-						Status = false,
-						Message = $"UserId: {MessagesConstant.RECORD_NOT_FOUND}"
-					};
-				}
-
 				// Validar que el evento del comentario existe
 				var existingEvent = await _context.Events.FindAsync(dto.EventId);
 				if (existingEvent is null)
@@ -132,6 +123,7 @@ namespace MeetPoint.API.Services
 
 				var commentEntity = _mapper.Map<CommentEntity>(dto);
 				commentEntity.PublicationDate = DateTime.Now;
+				commentEntity.UserId = _auditService.GetUserId();
 
 				_context.Comments.Add(commentEntity);
 				await _context.SaveChangesAsync();
@@ -175,42 +167,6 @@ namespace MeetPoint.API.Services
 						Status = false,
 						Message = MessagesConstant.RECORD_NOT_FOUND
 					};
-				}
-
-				// Validar si el UserId o EventId estan siendo modificados
-				if (dto.UserId.ToString() != commentEntity.UserId || dto.EventId != commentEntity.EventId)
-				{
-					// Validar que UserId existe si se va a editar
-					if (dto.UserId.ToString() != commentEntity.UserId)
-					{
-						var existingUser = await _context.Users.FindAsync(dto.UserId);
-						if (existingUser is null)
-						{
-							return new ResponseDto<CommentDto>
-							{
-								StatusCode = 404,
-								Status = false,
-								Message = $"UserId: {MessagesConstant.RECORD_NOT_FOUND}"
-							};
-						}
-						commentEntity.UserId = dto.UserId.ToString();
-					}
-
-					// Validar que EventId existe si se va a editar
-					if (dto.EventId != commentEntity.EventId)
-					{
-						var existingEvent = await _context.Events.FindAsync(dto.EventId);
-						if (existingEvent is null)
-						{
-							return new ResponseDto<CommentDto>
-							{
-								StatusCode = 404,
-								Status = false,
-								Message = $"EventId: {MessagesConstant.RECORD_NOT_FOUND}"
-							};
-						}
-						commentEntity.EventId = dto.EventId;
-					}
 				}
 
 				_mapper.Map(dto, commentEntity);

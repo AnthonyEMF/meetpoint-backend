@@ -36,7 +36,7 @@ namespace MeetPoint.API.Controllers
         }
 
         [HttpPost]
-		[Authorize(Roles = $"{RolesConstant.USER}, {RolesConstant.ORGANIZER}")]
+		[Authorize(Roles = $"{RolesConstant.USER}, {RolesConstant.ADMIN}, {RolesConstant.ORGANIZER}")]
 		public async Task<ActionResult<ResponseDto<CommentDto>>> Create(CommentCreateDto dto)
         {
             var response = await _commentsService.CreateAsync(dto);
@@ -44,7 +44,7 @@ namespace MeetPoint.API.Controllers
         }
 
         [HttpPut("{id}")]
-		[Authorize(Roles = $"{RolesConstant.USER}, {RolesConstant.ORGANIZER}")]
+		[Authorize(Roles = $"{RolesConstant.USER}, {RolesConstant.ADMIN}, {RolesConstant.ORGANIZER}")]
 		public async Task<ActionResult<ResponseDto<CommentDto>>> Edit(CommentEditDto dto, Guid id)
         {
             var response = await _commentsService.EditAsync(dto, id);
@@ -52,7 +52,7 @@ namespace MeetPoint.API.Controllers
         }
 
         [HttpDelete("{id}")]
-		[Authorize(Roles = $"{RolesConstant.USER}, {RolesConstant.ORGANIZER}")]
+		[Authorize(Roles = $"{RolesConstant.USER}, {RolesConstant.ADMIN}, {RolesConstant.ORGANIZER}")]
 		public async Task<ActionResult<ResponseDto<CommentDto>>> Delete(Guid id)
         {
             var response = await _commentsService.DeleteAsync(id);

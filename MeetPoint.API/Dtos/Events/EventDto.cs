@@ -11,7 +11,7 @@ namespace MeetPoint.API.Dtos.Events
         public Guid Id { get; set; }
 		public Guid CategoryId { get; set; }
 		public string CategoryName { get; set; }
-		public Guid OrganizerId { get; set; }
+		public string OrganizerId { get; set; }
 		public string OrganizerName { get; set; }
 		public string Title { get; set; }
 		public string Description { get; set; }
