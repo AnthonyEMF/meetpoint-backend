@@ -81,6 +81,7 @@ namespace MeetPoint.API.Services
 						Token = new JwtSecurityTokenHandler().WriteToken(jwtToken),
 						TokenExpiration = jwtToken.ValidTo,
 						RefreshToken = refreshToken,
+						RefreshTokenExpire = userEntity.RefreshTokenExpire,
 					}
 				};
 			}
@@ -125,6 +126,7 @@ namespace MeetPoint.API.Services
 						Token = new JwtSecurityTokenHandler().WriteToken(jwtToken),
 						TokenExpiration = jwtToken.ValidTo,
 						RefreshToken = refreshToken,
+						RefreshTokenExpire = userEntity.RefreshTokenExpire,
 					}
 				};
 			}
@@ -203,7 +205,8 @@ namespace MeetPoint.API.Services
 					FullName = $"{userEntity.FirstName} {userEntity.LastName}",
 					Token = new JwtSecurityTokenHandler().WriteToken(JwtToken),
 					TokenExpiration = JwtToken.ValidTo,
-					RefreshToken = GenerateRefreshTokenString()
+					RefreshToken = GenerateRefreshTokenString(),
+					RefreshTokenExpire = userEntity.RefreshTokenExpire,
 				};
 
 				// Pasar el refreshToken al userEntity
@@ -271,6 +274,7 @@ namespace MeetPoint.API.Services
 					new Claim(ClaimTypes.Email, userEntity.Email),
 					new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
 					new Claim("UserId", userEntity.Id),
+					new Claim("RefreshTokenExpire", userEntity.RefreshTokenExpire.ToString()),
 				};
 
 			var userRoles = await _userManager.GetRolesAsync(userEntity);

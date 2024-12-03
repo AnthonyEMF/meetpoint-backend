@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MeetPoint.API.Migrations
 {
     [DbContext(typeof(MeetPointContext))]
-    [Migration("20241110013035_AddRefreshToken")]
-    partial class AddRefreshToken
+    [Migration("20241203164933_init")]
+    partial class init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

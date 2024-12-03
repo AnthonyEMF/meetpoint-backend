@@ -12,7 +12,7 @@
 		public const string DELETE_SUCCESS = "Registro eliminado correctamente.";
 		public const string DELETE_ERROR = "Se produjo un error al eliminar el registro.";
 		public const string LOGIN_SUCCESS = "Sesión iniciada correctamente.";
-		public const string LOGIN_ERROR = "Se produjo un error al iniciar sesión.";
+		public const string LOGIN_ERROR = "Se produjo un error al iniciar sesión, el correo o la contraseña no existen.";
 		public const string REGISTER_SUCCESS = "Registro de usuario creado correctamente.";
 		public const string REGISTER_ERROR = "Se produjo un error al registrar el usuario.";
 	}

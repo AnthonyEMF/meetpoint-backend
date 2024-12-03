@@ -39,9 +39,5 @@ namespace MeetPoint.API.Database.Entities
 
 		// Navegación: Comentarios del usuario.
 		public virtual ICollection<CommentEntity> Comments { get; set; }
-
-		// Propiedades para el UserConfiguration (?)
-		//public virtual UserEntity CreatedByUser { get; set; }
-		//public virtual UserEntity UpdatedByUser { get; set; }
 	}
 }
