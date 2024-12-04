@@ -18,6 +18,8 @@ namespace MeetPoint.API.Dtos.Events
 		public string Ubication { get; set; }
 		public DateTime Date { get; set; }
         public DateTime PublicationDate { get; set; }
+		public int AttendancesCount { get; set; }
+		public int CommentsCount { get; set; }
 
 		public List<AttendanceDto> Attendances { get; set; }
 		public List<CommentDto> Comments { get; set; }

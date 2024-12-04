@@ -39,6 +39,14 @@ namespace MeetPoint.API.Database.Entities
 		[Column("publication_date")]
         public DateTime PublicationDate { get; set; }
 
+		// Propiedad calculada: Cantidad de asistencias del evento.
+		[NotMapped]
+		public int AttendancesCount => Attendances?.Count ?? 0;
+
+		// Propiedad calculada: Cantidad de comentarios del evento.
+		[NotMapped]
+		public int CommentsCount => Comments?.Count ?? 0;
+
 		// Navegación: Asistencias del Evento.
 		public virtual ICollection<AttendanceEntity> Attendances { get; set; }
 
