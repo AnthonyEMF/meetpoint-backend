@@ -36,8 +36,9 @@ namespace MeetPoint.API.Database
 			modelBuilder.ApplyConfiguration(new CategoryConfiguration());
 			modelBuilder.ApplyConfiguration(new CommentConfiguration());
 			modelBuilder.ApplyConfiguration(new EventConfiguration());
+			modelBuilder.ApplyConfiguration(new ReportConfiguration());
 
-			// Configuración para evitar errores en cascada
+			// Configuración para la eliminación en cascada
 			modelBuilder.Entity<AttendanceEntity>()
 				.HasOne(a => a.User)
 				.WithMany(u => u.Attendances)
@@ -61,6 +62,20 @@ namespace MeetPoint.API.Database
 				.WithMany(e => e.Comments)
 				.HasForeignKey(c => c.EventId)
 				.OnDelete(DeleteBehavior.Cascade);
+
+			// Reporter - ReportEntity
+			modelBuilder.Entity<ReportEntity>()
+				.HasOne(r => r.Reporter)
+				.WithMany(u => u.MadeReports)
+				.HasForeignKey(r => r.ReporterId)
+				.OnDelete(DeleteBehavior.Restrict);
+
+			// Organizer - ReportEntity
+			modelBuilder.Entity<ReportEntity>()
+				.HasOne(r => r.Organizer)
+				.WithMany(u => u.Reports)
+				.HasForeignKey(r => r.OrganizerId)
+				.OnDelete(DeleteBehavior.Restrict);
 		}
 
 		// Configurar la función SaveChangesAsync para el CreatedBy y UpdatedBy
@@ -95,5 +110,6 @@ namespace MeetPoint.API.Database
 		public DbSet<EventEntity> Events { get; set; }
 		public DbSet<AttendanceEntity> Attendances { get; set; }
 		public DbSet<CommentEntity> Comments { get; set; }
+		public DbSet<ReportEntity> Reports { get; set; }
 	}
 }

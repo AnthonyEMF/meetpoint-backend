@@ -112,6 +112,9 @@ namespace MeetPoint.API.Services
         {
 			try
 			{
+				// El UserId corresponde al usuario en sesión
+				dto.UserId = _auditService.GetUserId();
+
 				// Validar que el evento de la asistencia existe
 				var existingEvent = await _context.Events.FindAsync(dto.EventId);
 				if (existingEvent is null)
@@ -139,7 +142,6 @@ namespace MeetPoint.API.Services
 				}
 
 				var attendanceEntity = _mapper.Map<AttendanceEntity>(dto);
-				attendanceEntity.UserId = _auditService.GetUserId();
 
 				_context.Attendances.Add(attendanceEntity);
 				await _context.SaveChangesAsync();

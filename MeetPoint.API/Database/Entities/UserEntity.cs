@@ -31,6 +31,10 @@ namespace MeetPoint.API.Database.Entities
 		[NotMapped]
 		public int AttendancesCount => Attendances?.Count ?? 0;
 
+		// Propiedad calculada: Cantidad de reportes que se le han hecho al usuario.
+		[NotMapped]
+		public int ReportsCount => Reports?.Count ?? 0;
+
 		// Navegación: Eventos organizados por el usuario.
 		public virtual ICollection<EventEntity> OrganizedEvents { get; set; }
 
@@ -39,5 +43,11 @@ namespace MeetPoint.API.Database.Entities
 
 		// Navegación: Comentarios del usuario.
 		public virtual ICollection<CommentEntity> Comments { get; set; }
+
+		// Navegación: Reportes que el usuario ha hecho
+		public virtual ICollection<ReportEntity> MadeReports { get; set; }
+
+		// Navegación: Reportes hechos al usuario
+		public virtual ICollection<ReportEntity> Reports { get; set; }
 	}
 }

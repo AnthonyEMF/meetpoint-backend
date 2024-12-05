@@ -1,0 +1,15 @@
+meta {
+  name: Get By Id
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{PATH}}/reports/0e7c599a-5e5d-4cc8-a40c-08dd14df7314
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{TOKEN}}
+}

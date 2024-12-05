@@ -35,7 +35,13 @@ namespace MeetPoint.API.Services
 		public async Task<ResponseDto<PaginationDto<List<UserDto>>>> GetAllUsersAsync(string searchTerm = "", int page = 1)
 		{
 			int startIndex = (page - 1) * PAGE_SIZE;
-			var usersEntityQuery = _userManager.Users.AsQueryable();
+			var usersEntityQuery = _userManager.Users
+				.Include(u => u.OrganizedEvents).ThenInclude(e => e.Category)
+				.Include(u => u.Attendances)
+				.Include(u => u.Comments)
+				.Include(u => u.MadeReports)
+				.Include(u => u.Reports)
+				.AsQueryable();
 
 			if (!string.IsNullOrEmpty(searchTerm))
 			{
@@ -48,26 +54,18 @@ namespace MeetPoint.API.Services
 			int totalPages = (int)Math.Ceiling((double)totalUsers / PAGE_SIZE);
 
 			var usersEntity = await usersEntityQuery
-				.OrderBy(e => e.FirstName)
+				.OrderBy(u => u.FirstName)
 				.Skip(startIndex)
 				.Take(PAGE_SIZE)
 				.ToListAsync();
 
-			var usersDto = new List<UserDto>();
-			foreach (var user in usersEntity)
-			{
-				// Obtener rol del usuario
-				var userRole = await _userManager.GetRolesAsync(user);
+			var usersDto = _mapper.Map<List<UserDto>>(usersEntity);
 
-				usersDto.Add(new UserDto
-				{
-					Id = user.Id,
-					Roles = userRole.ToList(),
-					Email = user.Email,
-					PasswordHash = user.PasswordHash,
-					FirstName = user.FirstName,
-					LastName = user.LastName,
-				});
+			// Asignar roles a cada usuario
+			foreach (var userDto in usersDto)
+			{
+				var userEntity = usersEntity.First(u => u.Id == userDto.Id);
+				userDto.Roles = (await _userManager.GetRolesAsync(userEntity)).ToList();
 			}
 
 			return new ResponseDto<PaginationDto<List<UserDto>>>
@@ -94,6 +92,8 @@ namespace MeetPoint.API.Services
 				.Include(u => u.OrganizedEvents).ThenInclude(e => e.Category)
 				.Include(u => u.Attendances).ThenInclude(a => a.Event)
 				.Include(u => u.Comments).ThenInclude(c => c.Event)
+				.Include(u => u.MadeReports).ThenInclude(r => r.Organizer)
+				.Include(u => u.Reports).ThenInclude(r => r.Reporter)
 				.FirstOrDefaultAsync(u => u.Id == id);
 
 			if (userEntity is null)
@@ -118,6 +118,8 @@ namespace MeetPoint.API.Services
 				Data = userDto
 			};
 		}
+
+		// TODO: Probar, suceptible a cambios despúes de agregar rating
 
 		public async Task<ResponseDto<UserDto>> CreateAsync(UserCreateDto dto)
 		{

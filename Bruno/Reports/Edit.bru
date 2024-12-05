@@ -1,0 +1,21 @@
+meta {
+  name: Edit
+  type: http
+  seq: 1
+}
+
+put {
+  url: {{PATH}}/reports/db545a41-8f5e-49bd-5996-08dd14e39419
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{TOKEN}}
+}
+
+body:json {
+  {
+    "reason": "John fue muy irrespetuoso"
+  }
+}

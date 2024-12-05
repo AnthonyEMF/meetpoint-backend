@@ -1,0 +1,22 @@
+meta {
+  name: Create
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{PATH}}/reports
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{TOKEN}}
+}
+
+body:json {
+  {
+    "organizerId": "483b4387-4688-40c5-81f4-dad995f54bf2",
+    "reason": "Actitud irrespetuosa"
+  }
+}
