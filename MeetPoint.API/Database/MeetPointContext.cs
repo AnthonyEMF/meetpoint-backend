@@ -88,6 +88,12 @@ namespace MeetPoint.API.Database
 				.WithMany(u => u.MadeRatings)
 				.HasForeignKey(r => r.RaterId)
 				.OnDelete(DeleteBehavior.NoAction);
+			// relación de respuestas en Comentarios
+			modelBuilder.Entity<CommentEntity>()
+				.HasOne(c => c.ParentComment)
+				.WithMany(c => c.Replies)
+				.HasForeignKey(c => c.ParentId)
+				.OnDelete(DeleteBehavior.NoAction);
 		}
 
 		// Configurar la función SaveChangesAsync para el CreatedBy y UpdatedBy

@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
+﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -25,6 +24,14 @@ namespace MeetPoint.API.Database.Entities
 
 		[Column("publication_date")]
 		public DateTime PublicationDate { get; set; }
+
+		[Column("parent_id")]
+		public Guid? ParentId { get; set; }
+		[ForeignKey(nameof(ParentId))]
+		public virtual CommentEntity ParentComment { get; set; }
+
+		// Navegación: Respuestas del Comentario.
+		public virtual ICollection<CommentEntity> Replies { get; set; }
 
 		// Propiedades para el CommentConfiguration
 		public virtual UserEntity CreatedByUser { get; set; }

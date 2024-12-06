@@ -10,5 +10,6 @@ namespace MeetPoint.API.Dtos.Comments
 
 		[Required(ErrorMessage = "Es requerido escribir el contenido del comentario.")]
 		public string Content { get; set; }
+		public Guid? ParentId { get; set; }
 	}
 }

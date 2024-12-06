@@ -12,5 +12,8 @@ namespace MeetPoint.API.Dtos.Comments
 		public string EventTitle { get; set; }
 		public string Content { get; set; }
 		public DateTime PublicationDate { get; set; }
+
+		public Guid? ParentId { get; set; }
+		public List<CommentDto> Replies { get; set; }
 	}
 }
