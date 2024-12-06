@@ -4,6 +4,7 @@ using MeetPoint.API.Dtos.Attendances;
 using MeetPoint.API.Dtos.Categories;
 using MeetPoint.API.Dtos.Comments;
 using MeetPoint.API.Dtos.Events;
+using MeetPoint.API.Dtos.Ratings;
 using MeetPoint.API.Dtos.Reports;
 using MeetPoint.API.Dtos.Users;
 
@@ -19,6 +20,7 @@ namespace MeetPoint.API.Helpers
 			MapsForAttendances();
 			MapsForComments();
 			MapsForReports();
+			MapsForRatings();
 		}
 
 		private void MapsForCategories()
@@ -46,7 +48,9 @@ namespace MeetPoint.API.Helpers
 				.ForMember(dest => dest.Attendances, opt => opt.MapFrom(src => src.Attendances))
 				.ForMember(dest => dest.Comments, opt => opt.MapFrom(src => src.Comments))
 				.ForMember(dest => dest.Reports, opt => opt.MapFrom(src => src.Reports))
-				.ForMember(dest => dest.MadeReports, opt => opt.MapFrom(src => src.MadeReports));
+				.ForMember(dest => dest.MadeReports, opt => opt.MapFrom(src => src.MadeReports))
+				.ForMember(dest => dest.Ratings, opt => opt.MapFrom(src => src.Ratings))
+				.ForMember(dest => dest.MadeRatings, opt => opt.MapFrom(src => src.MadeRatings));
 
 			CreateMap<UserCreateDto, UserEntity>();
 			CreateMap<UserEditDto, UserEntity>();
@@ -80,6 +84,17 @@ namespace MeetPoint.API.Helpers
 
 			CreateMap<ReportCreateDto, ReportEntity>();
 			CreateMap<ReportEditDto, ReportEntity>();
+		}
+
+		private void MapsForRatings()
+		{
+			CreateMap<RatingEntity, RatingDto>()
+				.ForMember(dest => dest.RaterName, opt => opt.MapFrom(src => src.Rater.FirstName + " " + src.Rater.LastName))
+				.ForMember(dest => dest.EventTitle, opt => opt.MapFrom(src => src.Event.Title))
+				.ForMember(dest => dest.OrganizerName, opt => opt.MapFrom(src => src.Organizer.FirstName + " " + src.Organizer.LastName));
+
+			CreateMap<RatingCreateDto, RatingEntity>();
+			CreateMap<RatingEditDto, RatingEntity>();
 		}
 	}
 }

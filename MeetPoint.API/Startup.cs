@@ -40,6 +40,7 @@ namespace MeetPoint.API
 			services.AddTransient<IAttendancesService, AttendancesService>();
 			services.AddTransient<ICommentsService, CommentsService>();
 			services.AddTransient<IReportsService, ReportsService>();
+			services.AddTransient<IRatingsService, RatingsService>();
 			services.AddTransient<IUsersService, UsersService>();
 
 			// Security Services

@@ -35,6 +35,14 @@ namespace MeetPoint.API.Database.Entities
 		[NotMapped]
 		public int ReportsCount => Reports?.Count ?? 0;
 
+		// Propiedad calculada: Cantidad de ratings que se le han hecho al usuario.
+		[NotMapped]
+		public int RatingsCount => Ratings?.Count ?? 0;
+
+		// Propiedad calculada: Promedio de los ratings que se le han hecho al usuario.
+		[NotMapped]
+		public decimal AverageRating => Ratings?.Count > 0 ? Ratings.Average(r => r.Score) : 0;
+
 		// Navegación: Eventos organizados por el usuario.
 		public virtual ICollection<EventEntity> OrganizedEvents { get; set; }
 
@@ -49,5 +57,11 @@ namespace MeetPoint.API.Database.Entities
 
 		// Navegación: Reportes hechos al usuario
 		public virtual ICollection<ReportEntity> Reports { get; set; }
+
+		// Navegación: Ratings que el usuario ha hecho
+		public virtual ICollection<RatingEntity> MadeRatings { get; set; }
+
+		// Navegación: Ratings hechos al usuario
+		public virtual ICollection<RatingEntity> Ratings { get; set; }
 	}
 }

@@ -41,6 +41,8 @@ namespace MeetPoint.API.Services
 				.Include(u => u.Comments)
 				.Include(u => u.MadeReports)
 				.Include(u => u.Reports)
+				.Include(u => u.MadeRatings)
+				.Include(u => u.Ratings)
 				.AsQueryable();
 
 			if (!string.IsNullOrEmpty(searchTerm))
@@ -94,6 +96,8 @@ namespace MeetPoint.API.Services
 				.Include(u => u.Comments).ThenInclude(c => c.Event)
 				.Include(u => u.MadeReports).ThenInclude(r => r.Organizer)
 				.Include(u => u.Reports).ThenInclude(r => r.Reporter)
+				.Include(u => u.MadeRatings).ThenInclude(r => r.Organizer)
+				.Include(u => u.Ratings).ThenInclude(r => r.Rater)
 				.FirstOrDefaultAsync(u => u.Id == id);
 
 			if (userEntity is null)
@@ -119,8 +123,6 @@ namespace MeetPoint.API.Services
 			};
 		}
 
-		// TODO: Probar, suceptible a cambios despúes de agregar rating
-
 		public async Task<ResponseDto<UserDto>> CreateAsync(UserCreateDto dto)
 		{
 			// Validar si el email ya existe
@@ -136,6 +138,7 @@ namespace MeetPoint.API.Services
 			}
 
 			var user = _mapper.Map<UserEntity>(dto);
+			user.UserName = dto.Email;
 
 			// Crear nuevo usuario y pasar contraseña
 			var result = await _userManager.CreateAsync(user, dto.Password);
@@ -169,6 +172,9 @@ namespace MeetPoint.API.Services
 					}
 				};
 			}
+
+			//var errorMessages = string.Join(", ", result.Errors.Select(e => e.Description));
+			//Console.WriteLine($"Error al crear el usuario: {errorMessages}");
 
 			return new ResponseDto<UserDto>
 			{
@@ -297,8 +303,13 @@ namespace MeetPoint.API.Services
 				try
 				{
 					var userEntity = await _userManager.Users
+						.Include(u => u.OrganizedEvents)
 						.Include(u => u.Attendances)
 						.Include(u => u.Comments)
+						.Include(u => u.MadeReports)
+						.Include(u => u.Reports)
+						.Include(u => u.MadeRatings)
+						.Include(u => u.Ratings)
 						.FirstOrDefaultAsync(u => u.Id == id);
 
 					if (userEntity is null)
@@ -311,11 +322,26 @@ namespace MeetPoint.API.Services
 						};
 					}
 
+					// Eliminar eventos organizados por el usuario
+					_context.Events.RemoveRange(userEntity.OrganizedEvents);
+
 					// Eliminar comentarios del usuario
 					_context.Comments.RemoveRange(userEntity.Comments);
 
 					// Eliminar asistencias del usuario
 					_context.Attendances.RemoveRange(userEntity.Attendances);
+
+					// Eliminar ratings hechos por el usuario
+					_context.Ratings.RemoveRange(userEntity.MadeRatings); 
+					
+					// Eliminar ratings hechos al usuario
+					_context.Ratings.RemoveRange(userEntity.Ratings);
+					
+					// Eliminar reportes hechos por el usuario
+					_context.Reports.RemoveRange(userEntity.MadeReports);
+					
+					// Eliminar reportes hechos al usuario
+					_context.Reports.RemoveRange(userEntity.Reports);
 
 					// Remover los roles del usuario
 					var currentRoles = await _userManager.GetRolesAsync(userEntity);

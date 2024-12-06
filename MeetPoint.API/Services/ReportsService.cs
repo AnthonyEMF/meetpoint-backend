@@ -93,7 +93,7 @@ namespace MeetPoint.API.Services
 			var reportEntity = await _context.Reports
 				.Include(r => r.Reporter)
 				.Include(r => r.Organizer)
-				.FirstOrDefaultAsync(a => a.Id == id);
+				.FirstOrDefaultAsync(r => r.Id == id);
 
 			if (reportEntity is null)
 			{
@@ -146,7 +146,7 @@ namespace MeetPoint.API.Services
 					};
 				}
 
-				// Verificar si el usuario ya tiene una reporte registrado para el organizador
+				// Verificar si el usuario ya tiene un reporte registrado para el organizador
 				var existingReport = await _context.Reports
 					.AnyAsync(r => r.OrganizerId == dto.OrganizerId && r.ReporterId == dto.ReporterId);
 
