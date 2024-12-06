@@ -5,7 +5,6 @@ using MeetPoint.API.Database.Entities;
 using MeetPoint.API.Dtos.Common;
 using MeetPoint.API.Dtos.Events;
 using MeetPoint.API.Services.Interfaces;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace MeetPoint.API.Services
@@ -125,7 +124,18 @@ namespace MeetPoint.API.Services
 					};
 				}
 
-				var eventEntity = _mapper.Map<EventEntity>(dto);
+                // Validar que la fecha del evento no ha pasado aún
+                if (dto.Date <= DateTime.Now)
+                {
+					return new ResponseDto<EventDto>
+					{
+						StatusCode = 400,
+						Status = false,
+						Message = "La fecha ingresada ya pasó."
+					};
+				}
+
+                var eventEntity = _mapper.Map<EventEntity>(dto);
 				eventEntity.OrganizerId = _auditService.GetUserId();
 
 				eventEntity.PublicationDate = DateTime.Now;
@@ -190,20 +200,26 @@ namespace MeetPoint.API.Services
 					eventEntity.CategoryId = dto.CategoryId;
 				}
 
-				// Validar que el organizador existe si se va a editar
-				if (dto.OrganizerId != eventEntity.OrganizerId)
+				// Validar que la fecha del evento no ha pasado aún
+				if (dto.Date <= DateTime.Now)
 				{
-					var organizer = await _context.Users.FindAsync(dto.OrganizerId);
-					if (organizer == null)
+					return new ResponseDto<EventDto>
 					{
-						return new ResponseDto<EventDto>
-						{
-							StatusCode = 404,
-							Status = false,
-							Message = $"OrganizerId: {MessagesConstant.RECORD_NOT_FOUND}"
-						};
-					}
-					eventEntity.OrganizerId = dto.OrganizerId;
+						StatusCode = 400,
+						Status = false,
+						Message = "La fecha ingresada ya pasó."
+					};
+				}
+
+				// Validar que la fecha del evento no ha expirado
+				if (eventEntity.Date < DateTime.Now)
+                {
+					return new ResponseDto<EventDto>
+					{
+						StatusCode = 400,
+						Status = false,
+						Message = "El evento ya expiró."
+					};
 				}
 
 				// Actualizar propiedades del evento

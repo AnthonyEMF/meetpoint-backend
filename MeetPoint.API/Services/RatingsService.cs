@@ -137,7 +137,7 @@ namespace MeetPoint.API.Services
 				}
 
 				// Validar que la fecha del evento ya expiró
-				if (existingEvent.PublicationDate >= DateTime.Now)
+				if (existingEvent.Date >= DateTime.Now)
 				{
 					return new ResponseDto<RatingDto>
 					{

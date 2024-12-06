@@ -4,6 +4,7 @@ using MeetPoint.API.Database;
 using MeetPoint.API.Database.Entities;
 using MeetPoint.API.Dtos.Attendances;
 using MeetPoint.API.Dtos.Common;
+using MeetPoint.API.Dtos.Events;
 using MeetPoint.API.Services.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -124,6 +125,17 @@ namespace MeetPoint.API.Services
 						StatusCode = 404,
 						Status = false,
 						Message = $"EventId: {MessagesConstant.RECORD_NOT_FOUND}"
+					};
+				}
+
+				// Validar que la fecha del evento no ha expirado
+				if (existingEvent.Date < DateTime.Now)
+				{
+					return new ResponseDto<AttendanceDto>
+					{
+						StatusCode = 400,
+						Status = false,
+						Message = "El evento ya expiró."
 					};
 				}
 

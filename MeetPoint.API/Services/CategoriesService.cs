@@ -33,7 +33,7 @@ namespace MeetPoint.API.Services
 			var totalPages = (int)Math.Ceiling((double)totalCategories / PAGE_SIZE);
 
 			var categoriesEntity = await categoriesEntityQuery
-				.OrderBy(u => u.Description)
+				.OrderByDescending(u => u.CreatedDate)
 				.Skip(startIndex)
 				.Take(PAGE_SIZE)
 				.ToListAsync();
@@ -169,6 +169,18 @@ namespace MeetPoint.API.Services
 					Status = false,
 					Message = MessagesConstant.RECORD_NOT_FOUND
 				};
+			}
+
+			// Validar que la categoría no tenga eventos asociados
+			bool hasEvents = await _context.Events.AnyAsync(e => e.CategoryId == id);
+			if (hasEvents) 
+			{ 
+				return new ResponseDto<CategoryDto> 
+				{ 
+					StatusCode = 400, 
+					Status = false, 
+					Message = "La categoría no puede ser eliminada porque tiene eventos asociados." 
+				}; 
 			}
 
 			_context.Categories.Remove(categoryEntity);
