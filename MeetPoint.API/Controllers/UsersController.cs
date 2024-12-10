@@ -44,7 +44,7 @@ namespace MeetPoint.API.Controllers
         }
 
         [HttpPut("{id}")]
-		[Authorize(Roles = $"{RolesConstant.ADMIN}")]
+		[Authorize(Roles = $"{RolesConstant.ADMIN}, {RolesConstant.USER}")]
 		public async Task<ActionResult<ResponseDto<UserDto>>> Edit(UserEditDto dto, string id)
         {
             var response = await _usersService.EditAsync(dto, id);
@@ -52,7 +52,7 @@ namespace MeetPoint.API.Controllers
         }
 
         [HttpDelete("{id}")]
-		[Authorize(Roles = $"{RolesConstant.ADMIN}")]
+		[Authorize(Roles = $"{RolesConstant.ADMIN}, {RolesConstant.USER}")]
 		public async Task<ActionResult<ResponseDto<UserDto>>> Delete(string id)
         {
             var response = await _usersService.DeleteAsync(id);
