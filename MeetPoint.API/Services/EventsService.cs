@@ -53,7 +53,7 @@ namespace MeetPoint.API.Services
 			int totalPages = (int)Math.Ceiling((double)totalEvents / PAGE_SIZE);
 
 			var eventsEntity = await eventsEntityQuery
-				.OrderByDescending(e => e.PublicationDate)
+				.OrderByDescending(e => e.Date)
 				.Skip(startIndex)
 				.Take(PAGE_SIZE)
 				.ToListAsync();
@@ -208,17 +208,6 @@ namespace MeetPoint.API.Services
 						StatusCode = 400,
 						Status = false,
 						Message = "La fecha ingresada ya pasó."
-					};
-				}
-
-				// Validar que la fecha del evento no ha expirado
-				if (eventEntity.Date < DateTime.Now)
-                {
-					return new ResponseDto<EventDto>
-					{
-						StatusCode = 400,
-						Status = false,
-						Message = "El evento ya expiró."
 					};
 				}
 
