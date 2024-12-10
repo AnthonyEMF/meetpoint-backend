@@ -56,7 +56,7 @@ namespace MeetPoint.API.Database
 						Location = "Santa Rosa de Copán"
 					};
 
-					var userOrganizer = new UserEntity
+					var userAdmin2 = new UserEntity
 					{
 						Id = "b914d419-0dea-4117-a50f-4fc55b684901",
 						Email = "isaacvides@unah.hn",
@@ -77,11 +77,11 @@ namespace MeetPoint.API.Database
 					};
 
 					await userManager.CreateAsync(userAdmin, "Temporal01*");
-					await userManager.CreateAsync(userOrganizer, "Temporal01*");
+					await userManager.CreateAsync(userAdmin2, "Temporal01*");
 					await userManager.CreateAsync(normalUser, "Temporal01*");
 
 					await userManager.AddToRoleAsync(userAdmin, RolesConstant.ADMIN);
-					await userManager.AddToRoleAsync(userOrganizer, RolesConstant.ORGANIZER);
+					await userManager.AddToRoleAsync(userAdmin2, RolesConstant.ADMIN);
 					await userManager.AddToRoleAsync(normalUser, RolesConstant.USER);
 				}
 			}

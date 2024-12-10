@@ -3,6 +3,7 @@ using MeetPoint.API.Database.Entities;
 using MeetPoint.API.Dtos.Attendances;
 using MeetPoint.API.Dtos.Categories;
 using MeetPoint.API.Dtos.Comments;
+using MeetPoint.API.Dtos.Dashboard;
 using MeetPoint.API.Dtos.Events;
 using MeetPoint.API.Dtos.Ratings;
 using MeetPoint.API.Dtos.Reports;
@@ -14,6 +15,7 @@ namespace MeetPoint.API.Helpers
 	{
 		public AutoMapperProfile()
 		{
+			MapsForDashboard();
 			MapsForCategories();
 			MapsForEvents();
 			MapsForUsers();
@@ -21,6 +23,17 @@ namespace MeetPoint.API.Helpers
 			MapsForComments();
 			MapsForReports();
 			MapsForRatings();
+		}
+
+		private void MapsForDashboard()
+		{
+			CreateMap<CategoryEntity, DashboardCategoryDto>();
+			CreateMap<EventEntity, DashboardEventDto>();
+			CreateMap<UserEntity, DashboardUserDto>()
+				.ForMember(dest => dest.FullName, opt => opt.MapFrom(src => src.FirstName + " " + src.LastName));
+			CreateMap<ReportEntity, DashboardReportDto>()
+				.ForMember(dest => dest.ReporterName, opt => opt.MapFrom(src => src.Reporter.FirstName + " " + src.Reporter.LastName))
+				.ForMember(dest => dest.OrganizerName, opt => opt.MapFrom(src => src.Organizer.FirstName + " " + src.Organizer.LastName));
 		}
 
 		private void MapsForCategories()
