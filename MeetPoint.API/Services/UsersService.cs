@@ -325,27 +325,48 @@ namespace MeetPoint.API.Services
 						};
 					}
 
+					// Función para eliminar comentarios recursivamente
+					async Task DeleteCommentsRecursivelyAsync(IEnumerable<CommentEntity> comments)
+					{
+						foreach (var comment in comments)
+						{
+							// Obtener comentarios hijos
+							var childComments = await _context.Comments
+								.Where(c => c.ParentId == comment.Id)
+								.ToListAsync();
+
+							// Llamada recursiva para eliminar hijos
+							await DeleteCommentsRecursivelyAsync(childComments);
+
+							// Eliminar comentario actual
+							_context.Comments.Remove(comment);
+						}
+					}
+
+					// Eliminar todos los comentarios del usuario recursivamente
+					await DeleteCommentsRecursivelyAsync(userEntity.Comments);
+
 					// Eliminar membresía del usuario
-					_context.Memberships.Remove(userEntity.Membership);
+					if (userEntity.Membership is not null)
+					{
+						_context.Memberships.Remove(userEntity.Membership);
+					}
 
 					// Eliminar eventos organizados por el usuario
 					_context.Events.RemoveRange(userEntity.OrganizedEvents);
-
-					// Eliminar comentarios del usuario
-					_context.Comments.RemoveRange(userEntity.Comments);
 
 					// Eliminar asistencias del usuario
 					_context.Attendances.RemoveRange(userEntity.Attendances);
 
 					// Eliminar ratings hechos por el usuario
-					_context.Ratings.RemoveRange(userEntity.MadeRatings); 
-					
+					_context.Ratings.RemoveRange(userEntity.MadeRatings);
+
 					// Eliminar ratings hechos al usuario
 					_context.Ratings.RemoveRange(userEntity.Ratings);
-					
+
 					// Eliminar reportes hechos por el usuario
 					_context.Reports.RemoveRange(userEntity.MadeReports);
-					
+
 					// Eliminar reportes hechos al usuario
 					_context.Reports.RemoveRange(userEntity.Reports);
 
@@ -356,12 +377,12 @@ namespace MeetPoint.API.Services
 						await _userManager.RemoveFromRolesAsync(userEntity, currentRoles);
 					}
 
-					// Eliminar
+					// Eliminar usuario
 					var result = await _userManager.DeleteAsync(userEntity);
 
 					if (result.Succeeded)
 					{
-						// Guardar
+						// Guardar cambios
 						await _context.SaveChangesAsync();
 						await transaction.CommitAsync();
 
@@ -393,6 +414,7 @@ namespace MeetPoint.API.Services
 				}
 			}
 		}
+
 
 		public async Task<ResponseDto<UserDto>> ToggleBlockUserAsync(string id)
 		{
