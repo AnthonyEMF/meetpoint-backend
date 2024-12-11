@@ -58,5 +58,13 @@ namespace MeetPoint.API.Controllers
             var response = await _usersService.DeleteAsync(id);
             return StatusCode(response.StatusCode, response);
         }
-    }
+
+		[HttpPut("block/{id}")]
+		[Authorize(Roles = $"{RolesConstant.ADMIN}")]
+		public async Task<ActionResult<ResponseDto<UserDto>>> Block(string id)
+		{
+			var response = await _usersService.ToggleBlockUserAsync(id);
+			return StatusCode(response.StatusCode, response);
+		}
+	}
 }

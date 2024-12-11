@@ -1,0 +1,15 @@
+meta {
+  name: Toggle isBlocked
+  type: http
+  seq: 1
+}
+
+put {
+  url: {{PATH}}/users/block/704540fe-2eaa-412f-a635-d41a4ec17404
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{TOKEN}}
+}

@@ -15,7 +15,8 @@ namespace MeetPoint.API.Dtos.Users
         public string FirstName { get; set; }
 		public string LastName { get; set; }
         public string Location { get; set; }
-        public int EventsCount { get; set; }
+		public bool IsBlocked { get; set; }
+		public int EventsCount { get; set; }
         public int AttendancesCount { get; set; }
 		public int ReportsCount { get; set; }
 		public int RatingsCount { get; set; }

@@ -10,5 +10,6 @@ namespace MeetPoint.API.Services.Interfaces
 		Task<ResponseDto<UserDto>> CreateAsync(UserCreateDto dto);
 		Task<ResponseDto<UserDto>> EditAsync(UserEditDto dto, string id);
 		Task<ResponseDto<UserDto>> DeleteAsync(string id);
+		Task<ResponseDto<UserDto>> ToggleBlockUserAsync(string id);
 	}
 }

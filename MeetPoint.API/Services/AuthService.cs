@@ -3,8 +3,10 @@ using MeetPoint.API.Database;
 using MeetPoint.API.Database.Entities;
 using MeetPoint.API.Dtos.Auth;
 using MeetPoint.API.Dtos.Common;
+using MeetPoint.API.Dtos.Events;
 using MeetPoint.API.Services.Interfaces;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -102,6 +104,17 @@ namespace MeetPoint.API.Services
 			if (result.Succeeded)
 			{
 				var userEntity = await _userManager.FindByEmailAsync(dto.Email);
+
+				// Validar que el usuario no este bloqueado
+				if (userEntity.IsBlocked)
+				{
+					return new ResponseDto<LoginResponseDto>
+					{
+						StatusCode = 401,
+						Status = false,
+						Message = "El usuario ha sido bloqueado por incumplir las normas"
+					};
+				}
 
 				// Generación de Token
 				List<Claim> authClaims = await GetClaims(userEntity);

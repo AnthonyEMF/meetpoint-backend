@@ -387,5 +387,46 @@ namespace MeetPoint.API.Services
 				}
 			}
 		}
+
+		public async Task<ResponseDto<UserDto>> ToggleBlockUserAsync(string id)
+		{
+			var userEntity = await _userManager.Users.FirstOrDefaultAsync(u => u.Id == id);
+
+			if (userEntity is null)
+			{
+				return new ResponseDto<UserDto>
+				{
+					StatusCode = 404,
+					Status = false,
+					Message = MessagesConstant.RECORD_NOT_FOUND
+				};
+			}
+
+			// Cambiar el estado de IsBlocked al valor opuesto
+			userEntity.IsBlocked = !userEntity.IsBlocked;
+
+			var result = await _userManager.UpdateAsync(userEntity);
+			await _context.SaveChangesAsync();
+
+			if (!result.Succeeded)
+			{
+				return new ResponseDto<UserDto>
+				{
+					StatusCode = 400,
+					Status = false,
+					Message = MessagesConstant.UPDATE_ERROR
+				};
+			}
+
+			var userDto = _mapper.Map<UserDto>(userEntity);
+
+			return new ResponseDto<UserDto>
+			{
+				StatusCode = 200,
+				Status = true,
+				Message = MessagesConstant.UPDATE_SUCCESS,
+				Data = userDto
+			};
+		}
 	}
 }

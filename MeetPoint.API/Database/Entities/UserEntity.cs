@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Identity;
+using System.ComponentModel;
 
 namespace MeetPoint.API.Database.Entities
 {
@@ -22,6 +23,10 @@ namespace MeetPoint.API.Database.Entities
 		public string RefreshToken { get; set; }
 
 		public DateTime RefreshTokenExpire { get; set; }
+
+		[Required]
+		[DefaultValue(false)]
+		public bool IsBlocked { get; set; } = false;
 
 		// Propiedad calculada: Cantidad de eventos organizados por el usuario.
 		[NotMapped]
