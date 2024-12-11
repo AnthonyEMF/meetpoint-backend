@@ -1,0 +1,21 @@
+meta {
+  name: Add Membership
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{PATH}}/memberships
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{TOKEN}}
+}
+
+body:json {
+  {
+    "type": "Anual"
+  }
+}

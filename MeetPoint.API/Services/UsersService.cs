@@ -39,6 +39,7 @@ namespace MeetPoint.API.Services
 				.Include(u => u.OrganizedEvents).ThenInclude(e => e.Category)
 				.Include(u => u.Attendances)
 				.Include(u => u.Comments)
+				.Include(u => u.Membership)
 				.Include(u => u.MadeReports)
 				.Include(u => u.Reports)
 				.Include(u => u.MadeRatings)
@@ -94,6 +95,7 @@ namespace MeetPoint.API.Services
 				.Include(u => u.OrganizedEvents).ThenInclude(e => e.Category)
 				.Include(u => u.Attendances).ThenInclude(a => a.Event)
 				.Include(u => u.Comments).ThenInclude(c => c.Event)
+				.Include(u => u.Membership)
 				.Include(u => u.MadeReports).ThenInclude(r => r.Organizer)
 				.Include(u => u.Reports).ThenInclude(r => r.Reporter)
 				.Include(u => u.MadeRatings).ThenInclude(r => r.Organizer)
@@ -306,6 +308,7 @@ namespace MeetPoint.API.Services
 						.Include(u => u.OrganizedEvents)
 						.Include(u => u.Attendances)
 						.Include(u => u.Comments)
+						.Include(u => u.Membership)
 						.Include(u => u.MadeReports)
 						.Include(u => u.Reports)
 						.Include(u => u.MadeRatings)
@@ -321,6 +324,9 @@ namespace MeetPoint.API.Services
 							Message = MessagesConstant.RECORD_NOT_FOUND
 						};
 					}
+
+					// Eliminar membresía del usuario
+					_context.Memberships.Remove(userEntity.Membership);
 
 					// Eliminar eventos organizados por el usuario
 					_context.Events.RemoveRange(userEntity.OrganizedEvents);

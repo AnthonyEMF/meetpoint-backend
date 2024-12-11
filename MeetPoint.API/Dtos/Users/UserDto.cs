@@ -1,6 +1,7 @@
 ﻿using MeetPoint.API.Dtos.Attendances;
 using MeetPoint.API.Dtos.Comments;
 using MeetPoint.API.Dtos.Events;
+using MeetPoint.API.Dtos.Memberships;
 using MeetPoint.API.Dtos.Ratings;
 using MeetPoint.API.Dtos.Reports;
 
@@ -16,6 +17,7 @@ namespace MeetPoint.API.Dtos.Users
 		public string LastName { get; set; }
         public string Location { get; set; }
 		public bool IsBlocked { get; set; }
+		public MembershipDto Membership { get; set; }
 		public int EventsCount { get; set; }
         public int AttendancesCount { get; set; }
 		public int ReportsCount { get; set; }

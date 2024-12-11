@@ -38,6 +38,7 @@ namespace MeetPoint.API.Database
 			modelBuilder.ApplyConfiguration(new EventConfiguration());
 			modelBuilder.ApplyConfiguration(new ReportConfiguration());
 			modelBuilder.ApplyConfiguration(new RatingConfiguration());
+			modelBuilder.ApplyConfiguration(new MembershipConfiguration());
 
 			/* Configuración para las relaciones y la eliminación en cascada */
 			// relación AttendanceEntity y UserEntity
@@ -130,5 +131,6 @@ namespace MeetPoint.API.Database
 		public DbSet<CommentEntity> Comments { get; set; }
 		public DbSet<ReportEntity> Reports { get; set; }
 		public DbSet<RatingEntity> Ratings { get; set; }
+		public DbSet<MembershipEntity> Memberships { get; set; }
 	}
 }

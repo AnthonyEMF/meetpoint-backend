@@ -28,6 +28,9 @@ namespace MeetPoint.API.Database.Entities
 		[DefaultValue(false)]
 		public bool IsBlocked { get; set; } = false;
 
+		// Membresía del usuario
+		public virtual MembershipEntity Membership { get; set; }
+
 		// Propiedad calculada: Cantidad de eventos organizados por el usuario.
 		[NotMapped]
 		public int EventsCount => OrganizedEvents?.Count ?? 0;
