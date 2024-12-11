@@ -42,7 +42,7 @@ namespace MeetPoint.API.Services
 			if (!string.IsNullOrEmpty(searchTerm))
 			{
 				reportsEntityQuery = reportsEntityQuery
-					.Where(r => (r.Reporter + " " + r.Organizer + " " + r.ReportDate)
+					.Where(r => (r.Reporter.FirstName + " " + r.Reason + " " + r.Organizer.FirstName + " " + r.ReportDate)
 					.ToLower().Contains(searchTerm.ToLower()));
 			}
 
